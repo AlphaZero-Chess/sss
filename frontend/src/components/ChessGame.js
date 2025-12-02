@@ -623,9 +623,9 @@ const ChessGame = ({ enemy, playerColor, onGameEnd, onBack }) => {
                        (playerColor === 'black' && currentTurn === 'b');
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center p-2 sm:p-4 relative overflow-hidden" data-testid="chess-game-container">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-2 sm:p-4 relative overflow-hidden" data-testid="chess-game-container" style={{ background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%)' }}>
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900" />
+      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900" style={{ zIndex: 0, minHeight: '100vh', minWidth: '100vw' }} />
 
       {/* Main Layout */}
       <div className={`relative z-10 flex ${isMobile ? 'flex-col' : 'flex-row'} items-start justify-center gap-3 sm:gap-6 w-full max-w-6xl`}>

@@ -71,9 +71,9 @@ const VictoryScreen = ({ winner, enemy, playerColor, onRestart }) => {
   const Icon = config.icon;
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center p-3 sm:p-4 relative overflow-hidden">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-3 sm:p-4 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%)' }}>
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900" />
+      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900" style={{ zIndex: 0, minHeight: '100vh', minWidth: '100vw' }} />
       
       {/* Animated glow effect */}
       <div 
