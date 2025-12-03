@@ -129,7 +129,7 @@ const EnemySelect = ({ onSelect }) => {
       </div>
 
       {/* Enemy Cards */}
-      <div className="relative z-10 flex flex-wrap justify-center gap-4 sm:gap-6 max-w-6xl px-2">
+      <div className="relative z-10 flex flex-wrap justify-center items-start gap-4 sm:gap-6 max-w-6xl px-2">
         {enemies.map((enemy, index) => {
           const Icon = enemy.icon;
           const isHovered = hoveredEnemy === enemy.id;
@@ -143,7 +143,8 @@ const EnemySelect = ({ onSelect }) => {
               className={`relative cursor-pointer transition-all duration-500 ${isReady ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
               style={{ 
                 transitionDelay: `${index * 100}ms`,
-                transform: isHovered ? 'scale(1.03) translateY(-5px)' : isSelected ? 'scale(1.01)' : 'scale(1)'
+                transform: isHovered ? 'scale(1.03) translateY(-5px)' : isSelected ? 'scale(1.01)' : 'scale(1)',
+                alignSelf: 'flex-start'
               }}
               onMouseEnter={() => setHoveredEnemy(enemy.id)}
               onMouseLeave={() => setHoveredEnemy(null)}
@@ -152,14 +153,15 @@ const EnemySelect = ({ onSelect }) => {
                 onSelect(enemy);
               }}
             >
-              {/* Special Aura for Hidden Master */}
+              {/* Special Aura for Hidden Master - positioned to not affect layout */}
               {isHiddenMaster && (
                 <div 
-                  className="absolute -inset-3 rounded-xl animate-pulse"
+                  className="absolute -inset-3 rounded-xl animate-pulse pointer-events-none"
                   style={{ 
                     background: 'linear-gradient(45deg, #bf00ff40, #ff00bf40, #ffcc0040, #bf00ff40)',
                     filter: 'blur(15px)',
-                    animation: 'pulse 2s infinite'
+                    animation: 'pulse 2s infinite',
+                    zIndex: -1
                   }}
                 />
               )}
@@ -169,7 +171,9 @@ const EnemySelect = ({ onSelect }) => {
                 className="absolute -inset-1.5 rounded-xl blur-lg transition-opacity duration-500"
                 style={{ 
                   background: enemy.gradient,
-                  opacity: isHovered ? 0.5 : isSelected ? 0.35 : isHiddenMaster ? 0.25 : 0 
+                  opacity: isHiddenMaster 
+                    ? (isHovered ? 0.5 : isSelected ? 0.35 : 0.25)
+                    : (isHovered ? 0.4 : isSelected ? 0.25 : 0)
                 }}
               />
               
@@ -181,9 +185,9 @@ const EnemySelect = ({ onSelect }) => {
                     ? 'linear-gradient(180deg, rgba(40,20,60,0.98) 0%, rgba(20,10,35,0.99) 100%)'
                     : 'linear-gradient(180deg, rgba(25,25,45,0.95) 0%, rgba(12,12,25,0.98) 100%)',
                   border: `2px solid ${isHovered || isSelected ? enemy.color : isHiddenMaster ? '#bf00ff50' : 'rgba(255,255,255,0.08)'}`,
-                  boxShadow: isHovered 
-                    ? `0 0 30px ${enemy.color}40${isHiddenMaster ? ', 0 0 60px #bf00ff30' : ''}` 
-                    : isHiddenMaster ? '0 0 20px #bf00ff20' : 'none'
+                  boxShadow: isHiddenMaster 
+                    ? (isHovered ? `0 0 30px ${enemy.color}40, 0 0 60px #bf00ff30` : '0 0 20px #bf00ff20')
+                    : (isHovered ? `0 0 30px ${enemy.color}30` : 'none')
                 }}
               >
                 {/* Hidden Master Badge */}
@@ -300,7 +304,7 @@ const EnemySelect = ({ onSelect }) => {
 
                   {/* Traits */}
                   <div className="flex flex-wrap gap-1 mb-3">
-                    {enemy.traits.slice(0, 3).map((trait, i) => (
+                    {enemy.traits.slice(0, isHiddenMaster ? 3 : 2).map((trait, i) => (
                       <span 
                         key={i}
                         className="px-2 py-0.5 rounded-full font-medium"
@@ -343,9 +347,9 @@ const EnemySelect = ({ onSelect }) => {
                     style={{ 
                       background: enemy.gradient,
                       fontFamily: 'Orbitron, sans-serif',
-                      boxShadow: isHovered 
-                        ? `0 0 20px ${enemy.color}50${isHiddenMaster ? ', 0 0 40px #bf00ff30' : ''}` 
-                        : isHiddenMaster ? `0 0 10px ${enemy.color}30` : 'none',
+                      boxShadow: isHiddenMaster 
+                        ? (isHovered ? `0 0 20px ${enemy.color}50, 0 0 40px #bf00ff30` : `0 0 10px ${enemy.color}30`)
+                        : (isHovered ? `0 0 20px ${enemy.color}50` : 'none'),
                       color: isHiddenMaster ? '#000' : '#fff',
                       textShadow: isHiddenMaster ? 'none' : 'none'
                     }}
