@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, Flame, Star } from 'lucide-react';
+import { Crown, Flame, Star, Sparkles } from 'lucide-react';
 
 const enemies = [
   {
@@ -16,7 +16,8 @@ const enemies = [
     style: 'Prioritizes piece activity and king safety.',
     avatar: '♚',
     skillLevel: 20,
-    depth: 18
+    depth: 18,
+    isHidden: false
   },
   {
     id: 'nonelegant',
@@ -32,7 +33,8 @@ const enemies = [
     style: 'Attacks relentlessly. Tactics over position.',
     avatar: '♛',
     skillLevel: 20,
-    depth: 20
+    depth: 20,
+    isHidden: false
   },
   {
     id: 'minia0',
@@ -48,7 +50,27 @@ const enemies = [
     style: 'Balanced play with solid fundamentals.',
     avatar: '♞',
     skillLevel: 15,
-    depth: 12
+    depth: 12,
+    isHidden: false
+  },
+  {
+    id: 'alphazero',
+    name: 'ALPHAZERO',
+    subtitle: 'The Pure Algorithm',
+    description: 'The fearless swashbuckler. Neural intuition meets beautiful sacrifices. Initiative over material. The original that taught itself chess perfection.',
+    traits: ['Neural Intuition', 'Fearless Sacrifices', 'h4-h5 Storms'],
+    color: '#bf00ff',
+    gradient: 'linear-gradient(135deg, #bf00ff 0%, #ff00bf 50%, #ffcc00 100%)',
+    icon: Sparkles,
+    difficulty: 'LEGENDARY',
+    openings: ['English Opening', "King's Indian", 'Grünfeld Defense'],
+    style: 'Pure neural mastery. Sacrifices for initiative. Beautiful, intuitive chess.',
+    avatar: '👁',
+    skillLevel: 20,
+    depth: 24,
+    isHidden: true,
+    lore: 'Born from pure self-play, mastering chess in mere hours. Plays with deliberate purpose from the first move - as if reading from the secret notebooks of a chess god.',
+    signature: 'Famous h4-h5 kingside storms, exchange sacrifices, bishop pair activation'
   }
 ];
 
@@ -112,6 +134,7 @@ const EnemySelect = ({ onSelect }) => {
           const Icon = enemy.icon;
           const isHovered = hoveredEnemy === enemy.id;
           const isSelected = selectedIndex === index;
+          const isHiddenMaster = enemy.isHidden;
           
           return (
             <div
@@ -129,12 +152,24 @@ const EnemySelect = ({ onSelect }) => {
                 onSelect(enemy);
               }}
             >
+              {/* Special Aura for Hidden Master */}
+              {isHiddenMaster && (
+                <div 
+                  className="absolute -inset-3 rounded-xl animate-pulse"
+                  style={{ 
+                    background: 'linear-gradient(45deg, #bf00ff40, #ff00bf40, #ffcc0040, #bf00ff40)',
+                    filter: 'blur(15px)',
+                    animation: 'pulse 2s infinite'
+                  }}
+                />
+              )}
+              
               {/* Glow Effect */}
               <div 
                 className="absolute -inset-1.5 rounded-xl blur-lg transition-opacity duration-500"
                 style={{ 
                   background: enemy.gradient,
-                  opacity: isHovered ? 0.4 : isSelected ? 0.25 : 0 
+                  opacity: isHovered ? 0.5 : isSelected ? 0.35 : isHiddenMaster ? 0.25 : 0 
                 }}
               />
               
@@ -142,29 +177,72 @@ const EnemySelect = ({ onSelect }) => {
               <div 
                 className={`relative ${isMobile ? 'w-72' : 'w-64'} rounded-xl overflow-hidden`}
                 style={{
-                  background: 'linear-gradient(180deg, rgba(25,25,45,0.95) 0%, rgba(12,12,25,0.98) 100%)',
-                  border: `2px solid ${isHovered || isSelected ? enemy.color : 'rgba(255,255,255,0.08)'}`,
-                  boxShadow: isHovered ? `0 0 30px ${enemy.color}30` : 'none'
+                  background: isHiddenMaster 
+                    ? 'linear-gradient(180deg, rgba(40,20,60,0.98) 0%, rgba(20,10,35,0.99) 100%)'
+                    : 'linear-gradient(180deg, rgba(25,25,45,0.95) 0%, rgba(12,12,25,0.98) 100%)',
+                  border: `2px solid ${isHovered || isSelected ? enemy.color : isHiddenMaster ? '#bf00ff50' : 'rgba(255,255,255,0.08)'}`,
+                  boxShadow: isHovered 
+                    ? `0 0 30px ${enemy.color}40${isHiddenMaster ? ', 0 0 60px #bf00ff30' : ''}` 
+                    : isHiddenMaster ? '0 0 20px #bf00ff20' : 'none'
                 }}
               >
+                {/* Hidden Master Badge */}
+                {isHiddenMaster && (
+                  <div 
+                    className="absolute top-0 left-0 right-0 py-1 text-center text-xs font-bold tracking-widest z-20"
+                    style={{ 
+                      background: 'linear-gradient(90deg, #bf00ff, #ff00bf, #ffcc00)',
+                      fontFamily: 'Orbitron, sans-serif',
+                      fontSize: '9px',
+                      color: '#000',
+                      textShadow: '0 0 5px rgba(255,255,255,0.5)'
+                    }}
+                  >
+                    ★ HIDDEN MASTER ★
+                  </div>
+                )}
+                
                 {/* Header */}
                 <div 
-                  className="relative h-32 sm:h-36 flex items-center justify-center overflow-hidden"
+                  className={`relative ${isHiddenMaster ? 'h-36 sm:h-40 pt-5' : 'h-32 sm:h-36'} flex items-center justify-center overflow-hidden`}
                   style={{ background: `${enemy.gradient}15` }}
                 >
                   {/* Pattern overlay */}
                   <div className="absolute inset-0 opacity-10">
                     <div className="absolute inset-0" style={{
-                      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, ${enemy.color}15 10px, ${enemy.color}15 20px)`
+                      backgroundImage: isHiddenMaster 
+                        ? `repeating-linear-gradient(60deg, transparent, transparent 8px, ${enemy.color}20 8px, ${enemy.color}20 16px)`
+                        : `repeating-linear-gradient(45deg, transparent, transparent 10px, ${enemy.color}15 10px, ${enemy.color}15 20px)`
                     }} />
                   </div>
                   
+                  {/* Neural Network Effect for Hidden Master */}
+                  {isHiddenMaster && (
+                    <div className="absolute inset-0 overflow-hidden opacity-30">
+                      {[...Array(8)].map((_, i) => (
+                        <div 
+                          key={i}
+                          className="absolute rounded-full bg-purple-500"
+                          style={{
+                            width: '4px',
+                            height: '4px',
+                            left: `${15 + i * 10}%`,
+                            top: `${20 + (i % 3) * 25}%`,
+                            boxShadow: '0 0 10px #bf00ff',
+                            animation: `pulse ${1 + i * 0.2}s infinite`
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  
                   {/* Avatar */}
                   <span 
-                    className="text-6xl sm:text-7xl transition-transform duration-500"
+                    className={`${isHiddenMaster ? 'text-7xl sm:text-8xl' : 'text-6xl sm:text-7xl'} transition-transform duration-500`}
                     style={{ 
-                      filter: `drop-shadow(0 0 20px ${enemy.color})`,
-                      transform: isHovered ? 'scale(1.15)' : 'scale(1)'
+                      filter: `drop-shadow(0 0 ${isHiddenMaster ? '30px' : '20px'} ${enemy.color})`,
+                      transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                      animation: isHiddenMaster ? 'float 3s ease-in-out infinite' : 'none'
                     }}
                   >
                     {enemy.avatar}
@@ -172,11 +250,12 @@ const EnemySelect = ({ onSelect }) => {
                   
                   {/* Difficulty Badge */}
                   <div 
-                    className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-xs font-bold tracking-wider"
+                    className={`absolute ${isHiddenMaster ? 'top-8' : 'top-3'} right-3 px-2 py-0.5 rounded-full text-xs font-bold tracking-wider`}
                     style={{ 
                       background: enemy.gradient,
                       fontFamily: 'Orbitron, sans-serif',
-                      fontSize: '10px'
+                      fontSize: isHiddenMaster ? '9px' : '10px',
+                      boxShadow: isHiddenMaster ? `0 0 10px ${enemy.color}` : 'none'
                     }}
                   >
                     {enemy.difficulty.toUpperCase()}
@@ -186,19 +265,32 @@ const EnemySelect = ({ onSelect }) => {
                 {/* Content */}
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <Icon size={18} style={{ color: enemy.color }} />
+                    <Icon 
+                      size={isHiddenMaster ? 20 : 18} 
+                      style={{ 
+                        color: enemy.color,
+                        filter: isHiddenMaster ? `drop-shadow(0 0 5px ${enemy.color})` : 'none'
+                      }} 
+                    />
                     <h2 
-                      className="text-lg sm:text-xl font-black tracking-wide"
+                      className={`${isHiddenMaster ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'} font-black tracking-wide`}
                       style={{ 
                         fontFamily: 'Orbitron, sans-serif',
-                        color: enemy.color 
+                        color: enemy.color,
+                        textShadow: isHiddenMaster ? `0 0 10px ${enemy.color}80` : 'none'
                       }}
                     >
                       {enemy.name}
                     </h2>
                   </div>
                   
-                  <p className="text-gray-500 text-xs mb-2" style={{ fontFamily: 'Rajdhani, sans-serif' }}>
+                  <p 
+                    className="text-xs mb-2" 
+                    style={{ 
+                      fontFamily: 'Rajdhani, sans-serif',
+                      color: isHiddenMaster ? '#e0a0ff' : '#6b7280'
+                    }}
+                  >
                     {enemy.subtitle}
                   </p>
                   
@@ -208,7 +300,7 @@ const EnemySelect = ({ onSelect }) => {
 
                   {/* Traits */}
                   <div className="flex flex-wrap gap-1 mb-3">
-                    {enemy.traits.slice(0, 2).map((trait, i) => (
+                    {enemy.traits.slice(0, 3).map((trait, i) => (
                       <span 
                         key={i}
                         className="px-2 py-0.5 rounded-full font-medium"
@@ -217,7 +309,8 @@ const EnemySelect = ({ onSelect }) => {
                           color: enemy.color,
                           border: `1px solid ${enemy.color}30`,
                           fontFamily: 'Rajdhani, sans-serif',
-                          fontSize: '10px'
+                          fontSize: '10px',
+                          boxShadow: isHiddenMaster ? `0 0 5px ${enemy.color}30` : 'none'
                         }}
                       >
                         {trait}
@@ -228,7 +321,7 @@ const EnemySelect = ({ onSelect }) => {
                   {/* Skill Bar */}
                   <div className="mb-3">
                     <div className="flex justify-between text-xs text-gray-400 mb-1" style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '10px' }}>
-                      <span>SKILL</span>
+                      <span>{isHiddenMaster ? 'NEURAL POWER' : 'SKILL'}</span>
                       <span>{enemy.skillLevel}/20</span>
                     </div>
                     <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
@@ -236,7 +329,8 @@ const EnemySelect = ({ onSelect }) => {
                         className="h-full rounded-full transition-all duration-500"
                         style={{ 
                           width: `${(enemy.skillLevel / 20) * 100}%`,
-                          background: enemy.gradient
+                          background: enemy.gradient,
+                          boxShadow: isHiddenMaster ? `0 0 10px ${enemy.color}` : 'none'
                         }}
                       />
                     </div>
@@ -249,14 +343,18 @@ const EnemySelect = ({ onSelect }) => {
                     style={{ 
                       background: enemy.gradient,
                       fontFamily: 'Orbitron, sans-serif',
-                      boxShadow: isHovered ? `0 0 20px ${enemy.color}50` : 'none'
+                      boxShadow: isHovered 
+                        ? `0 0 20px ${enemy.color}50${isHiddenMaster ? ', 0 0 40px #bf00ff30' : ''}` 
+                        : isHiddenMaster ? `0 0 10px ${enemy.color}30` : 'none',
+                      color: isHiddenMaster ? '#000' : '#fff',
+                      textShadow: isHiddenMaster ? 'none' : 'none'
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
                       onSelect(enemy);
                     }}
                   >
-                    ⚔️ ENGAGE
+                    {isHiddenMaster ? '⚡ CHALLENGE THE MASTER' : '⚔️ ENGAGE'}
                   </button>
                 </div>
               </div>

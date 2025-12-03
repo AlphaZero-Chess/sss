@@ -210,3 +210,47 @@ body {
 
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@400;500;600;700&display=swap');
+
+/* Hidden Master AlphaZero Special Effects */
+@keyframes neural-pulse {
+  0%, 100% { 
+    opacity: 0.3;
+    box-shadow: 0 0 10px #bf00ff, 0 0 20px #bf00ff30;
+  }
+  50% { 
+    opacity: 0.8;
+    box-shadow: 0 0 20px #bf00ff, 0 0 40px #bf00ff50;
+  }
+}
+
+@keyframes rainbow-border {
+  0% { border-color: #bf00ff; }
+  25% { border-color: #ff00bf; }
+  50% { border-color: #ffcc00; }
+  75% { border-color: #ff00bf; }
+  100% { border-color: #bf00ff; }
+}
+
+@keyframes hidden-master-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(191, 0, 255, 0.3),
+      0 0 40px rgba(255, 0, 191, 0.2),
+      0 0 60px rgba(255, 204, 0, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(191, 0, 255, 0.5),
+      0 0 60px rgba(255, 0, 191, 0.3),
+      0 0 90px rgba(255, 204, 0, 0.2);
+  }
+}
+
+.hidden-master-card {
+  animation: rainbow-border 4s infinite, hidden-master-glow 2s infinite;
+}
+
+.hidden-master-avatar {
+  animation: float 3s ease-in-out infinite;
+}
+
