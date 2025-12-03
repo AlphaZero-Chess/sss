@@ -344,6 +344,7 @@ const AmongUsEasterEgg = ({ onUnlockKeyboard }) => {
       <style>{`
         .among-us-crewmate {
           animation: crewmate-idle 2s ease-in-out infinite;
+          pointer-events: auto !important;
         }
         
         .among-us-crewmate.peeking {
