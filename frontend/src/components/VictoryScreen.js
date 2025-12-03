@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Skull, Scale, RotateCcw, Swords } from 'lucide-react';
+import SneakyEyeTracker from './SneakyEyeTracker';
 
 const VictoryScreen = ({ winner, enemy, playerColor, onRestart }) => {
   const [isReady, setIsReady] = useState(false);
@@ -177,12 +178,22 @@ const VictoryScreen = ({ winner, enemy, playerColor, onRestart }) => {
             
             {/* Enemy */}
             <div className="text-center">
-              <span 
-                className={`${isMobile ? 'text-3xl' : 'text-4xl'} block mb-1`}
-                style={{ filter: `drop-shadow(0 0 10px ${enemy?.color})` }}
-              >
-                {enemy?.avatar}
-              </span>
+              {enemy?.avatar === '👁' ? (
+                <SneakyEyeTracker
+                  size="small"
+                  glowColor={enemy?.color}
+                  className={`${isMobile ? 'text-3xl' : 'text-4xl'} block mb-1`}
+                >
+                  {enemy?.avatar}
+                </SneakyEyeTracker>
+              ) : (
+                <span 
+                  className={`${isMobile ? 'text-3xl' : 'text-4xl'} block mb-1`}
+                  style={{ filter: `drop-shadow(0 0 10px ${enemy?.color})` }}
+                >
+                  {enemy?.avatar}
+                </span>
+              )}
               <p 
                 className="text-xs"
                 style={{ fontFamily: 'Rajdhani, sans-serif', color: enemy?.color }}

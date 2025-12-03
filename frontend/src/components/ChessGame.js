@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { ArrowLeft, RotateCcw, Flag, Zap, Maximize2, Minimize2, Move } from 'lucide-react';
+import SneakyEyeTracker from './SneakyEyeTracker';
 
 // ═══════════════════════════════════════════════════════════════════════
 // PERSONALITY IMPORTS - External personality files
@@ -642,9 +643,19 @@ const ChessGame = ({ enemy, playerColor, onGameEnd, onBack }) => {
           >
             {/* Enemy Info */}
             <div className="flex items-center gap-3 mb-3 pb-3 border-b border-white/10">
-              <span className="text-2xl sm:text-3xl" style={{ filter: `drop-shadow(0 0 8px ${enemy?.color})` }}>
-                {enemy?.avatar}
-              </span>
+              {enemy?.avatar === '👁' ? (
+                <SneakyEyeTracker
+                  size="small"
+                  glowColor={enemy?.color}
+                  className="text-2xl sm:text-3xl"
+                >
+                  {enemy?.avatar}
+                </SneakyEyeTracker>
+              ) : (
+                <span className="text-2xl sm:text-3xl" style={{ filter: `drop-shadow(0 0 8px ${enemy?.color})` }}>
+                  {enemy?.avatar}
+                </span>
+              )}
               <div>
                 <h3 
                   className="text-sm sm:text-base font-bold tracking-wide"

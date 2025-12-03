@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Crown, Flame, Star, Sparkles } from 'lucide-react';
+import SneakyEyeTracker from './SneakyEyeTracker';
 
 const enemies = [
   {
@@ -241,16 +242,28 @@ const EnemySelect = ({ onSelect }) => {
                   )}
                   
                   {/* Avatar */}
-                  <span 
-                    className={`${isHiddenMaster ? 'text-7xl sm:text-8xl' : 'text-6xl sm:text-7xl'} transition-transform duration-500`}
-                    style={{ 
-                      filter: `drop-shadow(0 0 ${isHiddenMaster ? '30px' : '20px'} ${enemy.color})`,
-                      transform: isHovered ? 'scale(1.15)' : 'scale(1)',
-                      animation: isHiddenMaster ? 'float 3s ease-in-out infinite' : 'none'
-                    }}
-                  >
-                    {enemy.avatar}
-                  </span>
+                  {isHiddenMaster && enemy.avatar === '👁' ? (
+                    <SneakyEyeTracker
+                      size="large"
+                      glowColor={enemy.color}
+                      style={{
+                        transform: isHovered ? 'scale(1.15)' : 'scale(1)'
+                      }}
+                    >
+                      {enemy.avatar}
+                    </SneakyEyeTracker>
+                  ) : (
+                    <span 
+                      className={`${isHiddenMaster ? 'text-7xl sm:text-8xl' : 'text-6xl sm:text-7xl'} transition-transform duration-500`}
+                      style={{ 
+                        filter: `drop-shadow(0 0 ${isHiddenMaster ? '30px' : '20px'} ${enemy.color})`,
+                        transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                        animation: isHiddenMaster ? 'float 3s ease-in-out infinite' : 'none'
+                      }}
+                    >
+                      {enemy.avatar}
+                    </span>
+                  )}
                   
                   {/* Difficulty Badge */}
                   <div 

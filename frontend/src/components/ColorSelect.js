@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Sword, Shield } from 'lucide-react';
+import SneakyEyeTracker from './SneakyEyeTracker';
 
 const ColorSelect = ({ enemy, onSelect, onBack }) => {
   const [hoveredColor, setHoveredColor] = useState(null);
@@ -83,9 +84,18 @@ const ColorSelect = ({ enemy, onSelect, onBack }) => {
           OPPONENT
         </p>
         <div className="flex items-center justify-center gap-3">
-          <span className="text-3xl sm:text-4xl" style={{ filter: `drop-shadow(0 0 15px ${enemy?.color})` }}>
-            {enemy?.avatar}
-          </span>
+          {enemy?.avatar === '👁' ? (
+            <SneakyEyeTracker
+              size="small"
+              glowColor={enemy?.color}
+            >
+              {enemy?.avatar}
+            </SneakyEyeTracker>
+          ) : (
+            <span className="text-3xl sm:text-4xl" style={{ filter: `drop-shadow(0 0 15px ${enemy?.color})` }}>
+              {enemy?.avatar}
+            </span>
+          )}
           <h2 
             className="text-xl sm:text-2xl font-black tracking-wider"
             style={{ 
