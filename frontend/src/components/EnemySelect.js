@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Crown, Flame, Star, Sparkles } from 'lucide-react';
 import SneakyEyeTracker from './SneakyEyeTracker';
+import HiddenMasterLock from './HiddenMasterLock';
 
 const enemies = [
   {
@@ -137,7 +138,8 @@ const EnemySelect = ({ onSelect }) => {
           const isSelected = selectedIndex === index;
           const isHiddenMaster = enemy.isHidden;
           
-          return (
+          // Card content component to avoid duplication
+          const CardContent = (
             <div
               key={enemy.id}
               data-testid={`enemy-card-${enemy.id}`}
@@ -377,6 +379,17 @@ const EnemySelect = ({ onSelect }) => {
               </div>
             </div>
           );
+          
+          // Wrap hidden master card with lock component
+          if (isHiddenMaster) {
+            return (
+              <HiddenMasterLock key={enemy.id}>
+                {CardContent}
+              </HiddenMasterLock>
+            );
+          }
+          
+          return CardContent;
         })}  
       </div>
 
