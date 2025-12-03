@@ -34,6 +34,13 @@ function App() {
     setWinner(null);
   };
 
+  // Play again with the same enemy - go directly to color selection
+  const handlePlayAgain = () => {
+    setPlayerColor(null);
+    setWinner(null);
+    setGameState("color-select");
+  };
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -65,7 +72,8 @@ function App() {
                     winner={winner}
                     enemy={selectedEnemy}
                     playerColor={playerColor}
-                    onRestart={handleRestart}
+                    onPlayAgain={handlePlayAgain}
+                    onNewEnemy={handleRestart}
                   />
                 )}
               </div>
