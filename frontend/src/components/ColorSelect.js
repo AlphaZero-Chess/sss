@@ -175,22 +175,6 @@ const ColorSelect = ({ enemy, onSelect, onBack }) => {
                   >
                     {color.piece}
                   </span>
-                  
-                  {/* VS indicator */}
-                  {!isMobile && index === 0 && (
-                    <div className="absolute -right-7 top-1/2 -translate-y-1/2 z-20">
-                      <span 
-                        className="text-2xl font-black"
-                        style={{ 
-                          fontFamily: 'Orbitron, sans-serif',
-                          color: '#ff0080',
-                          textShadow: '0 0 15px #ff0080'
-                        }}
-                      >
-                        VS
-                      </span>
-                    </div>
-                  )}
                 </div>
 
                 {/* Content */}
