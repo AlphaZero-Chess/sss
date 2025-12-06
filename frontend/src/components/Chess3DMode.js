@@ -187,10 +187,13 @@ const Chess3DMode = ({
   isThinking,
   boardSize = 400 
 }) => {
-  const [rotationX, setRotationX] = useState(55);
+  // Start with bird's eye view (rotationX = 90 means looking straight down)
+  const [rotationX, setRotationX] = useState(85);
   const [rotationZ, setRotationZ] = useState(playerColor === 'white' ? 0 : 180);
   const [isDragging, setIsDragging] = useState(false);
+  const [isTouchDragging, setIsTouchDragging] = useState(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
+  const lastTouchPos = useRef({ x: 0, y: 0 });
   const containerRef = useRef(null);
 
   // Parse position
@@ -221,7 +224,7 @@ const Chess3DMode = ({
     return result;
   }, [pieces, legalMoves, selectedSquare]);
 
-  // Mouse drag for rotation
+  // Mouse drag for rotation (right-click for desktop)
   const handleMouseDown = useCallback((e) => {
     if (e.button === 2) { // Right click for rotation
       setIsDragging(true);
@@ -236,7 +239,7 @@ const Chess3DMode = ({
     const deltaY = e.clientY - lastMousePos.current.y;
     
     setRotationZ(prev => prev + deltaX * 0.5);
-    setRotationX(prev => Math.max(20, Math.min(80, prev - deltaY * 0.5)));
+    setRotationX(prev => Math.max(20, Math.min(85, prev - deltaY * 0.5)));
     
     lastMousePos.current = { x: e.clientX, y: e.clientY };
   }, [isDragging]);
@@ -245,14 +248,49 @@ const Chess3DMode = ({
     setIsDragging(false);
   }, []);
 
+  // Touch support for mobile devices (two-finger drag to rotate)
+  const handleTouchStart = useCallback((e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      setIsTouchDragging(true);
+      const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      lastTouchPos.current = { x: midX, y: midY };
+    }
+  }, []);
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isTouchDragging || e.touches.length !== 2) return;
+    e.preventDefault();
+    
+    const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    
+    const deltaX = midX - lastTouchPos.current.x;
+    const deltaY = midY - lastTouchPos.current.y;
+    
+    setRotationZ(prev => prev + deltaX * 0.5);
+    setRotationX(prev => Math.max(20, Math.min(85, prev - deltaY * 0.5)));
+    
+    lastTouchPos.current = { x: midX, y: midY };
+  }, [isTouchDragging]);
+
+  const handleTouchEnd = useCallback(() => {
+    setIsTouchDragging(false);
+  }, []);
+
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [handleMouseMove, handleMouseUp]);
+  }, [handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   // Update rotation when player color changes
   useEffect(() => {
@@ -266,11 +304,13 @@ const Chess3DMode = ({
       className="chess-3d-container"
       ref={containerRef}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
       onContextMenu={(e) => e.preventDefault()}
       style={{ 
         width: boardSize + 100, 
         height: boardSize + 100,
-        perspective: '1200px'
+        perspective: '1200px',
+        touchAction: 'none'
       }}
       data-testid="chess-3d-mode"
     >
@@ -433,9 +473,11 @@ const Chess3DMode = ({
         </div>
       )}
 
-      {/* Rotation hint */}
+      {/* Rotation hint - device aware */}
       <div className="rotation-hint">
-        Right-click + drag to rotate
+        {typeof window !== 'undefined' && 'ontouchstart' in window 
+          ? 'Two-finger drag to rotate' 
+          : 'Right-click + drag to rotate'}
       </div>
 
       {/* Styles */}
